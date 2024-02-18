@@ -34,6 +34,7 @@ export default function InputWithButton() {
       }
       fetchdata();
       checkallprice();
+      console.log(cards)
     }, []);
   async function posturl(url1){
     
@@ -117,6 +118,7 @@ export default function InputWithButton() {
       <Input  placeholder="Enter Link" onChange={(e) =>handlechange(e.target.value)} />
       <Button type="submit" onClick={onclick}>Search</Button>
       <Button className="flex items-center justify-center" onClick={()=>checkallprice()}>Check All</Button>
+     
     </div>
     {cards.map((cardcontent , index) =>(
       <Card key={index} className="lg:max-h-px-xs grid grid-cols-1 md:grid-cols-3  lg:grid-cols-4 gap-4 m-2 ">

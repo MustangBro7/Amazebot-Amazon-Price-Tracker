@@ -16,26 +16,52 @@ import requests
 import pytesseract
 from flask_cors import CORS
 from database import insert_data , update_data , get_data , delete_data
+from selenium_stealth import stealth
+import schedule
+from flask_apscheduler import APScheduler
 
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 app = Flask(__name__)
 CORS(app)
+scheduler = APScheduler()
+# scheduler.init_app(app)
+
+# @scheduler.task('cron', hour=23, minute=10 , timezone='Asia/Kolkata')
+def scheduled_update():
+    current_data = get_data()
+    for i in current_data:
+        url1 = i[3]
+        print(url1)
+        data = {"url":url1}
+        requests.post("http://localhost:5000" , json = data)
+
 @app.route('/' , methods = ['GET' , "POST" ])
 
 def bot():
     if request.method == 'POST':
         data = request.get_json()
         print(data['url'])
-    # elif request.method == 'DELETE':
-    #     data = request.get_json()
-    #     print(data)
-    #     delete_data(data['url'])
-    # url = "https://www.amazon.in/Nike-Vision-Black-White-Sneaker-DN3577-101/dp/B09NMH8JY4/ref=sr_1_5?crid=1O7EIEUA1OKT7&keywords=nike%2Bshoes&qid=1706368305&sprefix=nike%2Bshoe%2Caps%2C375&sr=8-5&th=1&psc=1"
     url = data['url']
-    # url2 = "https://www.amazon.in/Nike-Zoom-Court-3-WHITE-MNNAVY-DV3258-102-4UK/dp/B09NMHT118/ref=sr_1_20?crid=1TOSKMKZDWZZ0&dib=eyJ2IjoiMSJ9.E1W9kL0ibMVlEbBqU_T8D5l6vRQXv0fyoDC8fpWqBmD--NzyAcpjAbu4gPZwf66B0RRKoKIb6ET3-IdZEQ2GT-7tc4crcSIlJbH9QoylLTrxAa1Uh4PLWyudCEUjZzEnK_DuV7K4TTPpu8DVQffQZ8X6amPOFBLm1ZcUGftEstjrvcn7VZFVCkgEGy6hJBmlEOZ-t0tPDvGJ97l1qViddD7uN5oqOWizR-8KNY5P8oVQ32Gneu3LN3QnOYDRXZQgl6kVZLp92XQY6BI6lMD9BOUoMRGlZWHzfdv74bj5p3E.mBPeeF_N_h06bN_NNBnWtaaJBhAcuHNhyRF7lXtSLrI&dib_tag=se&keywords=nike%2Bshoes%2Bfor%2Bmen&qid=1705725987&sprefix=nike%2B%2Caps%2C190&sr=8-20&th=1"
     chrome_options = Options()
     chrome_options.add_argument("--headless")
+    chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
+    chrome_options.add_experimental_option("useAutomationExtension", False)
+    # chrome_options.add_argument("user-data-dir=selenium")
     driver = webdriver.Chrome(options=chrome_options)
+    # stealth(driver,
+    #    user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.5481.105 Safari/537.36',
+    #    languages=["en-US", "en"],
+    #    vendor="Google Inc.",
+    #    platform="Win32",
+    #    webgl_vendor="Intel Inc.",
+    #    renderer="Intel Iris OpenGL Engine",
+    #    fix_hairline=True,
+    #    )
+    driver.get(url)
+    cookies = driver.get_cookies()
+    for cookie in cookies:
+        driver.add_cookie(cookie)
+    print(cookies)
     driver.get(url)
     # captcha = driver.find_element(By.CSS_SELECTOR, 'iframe[role=presentation]')
     # driver.switch_to.frame(captcha)
@@ -103,9 +129,12 @@ def bot():
     updated_data = update_data(display_price , product_name , url , img_src)
     # print(json.dumps(updated_data[2]))
     # full_data = get_data()
+    
+
+    # schedule.every().day.at("22:03").do(scheduled_update)
     return {"Price": display_price , "Name": product_name , "link":url , "img_link":img_src}
 
-    
+
 
 @app.route('/getdata' , methods = ['GET' , "POST"])
 def getdata():
@@ -121,6 +150,18 @@ def deletedata():
     print(data)
     delete_data(data['url'])
     return data
+
+
 if __name__ == '__main__':
+    scheduler.add_job(id = "job1" , func= scheduled_update , trigger = "cron", day_of_week = 'mon-sun' , hour= 9 , minute=00 )
+    scheduler.add_job(id = "job2" , func= scheduled_update , trigger = "cron", day_of_week = 'mon-sun' , hour= 21 , minute=00 )
+    scheduler.start()  
     app.run(debug=True)
     
+
+
+# def run_scheduled_update_in_thread():
+#     while True:
+#         schedule.run_pending()
+#         time.sleep(1)
+# schedule.run_pending()
