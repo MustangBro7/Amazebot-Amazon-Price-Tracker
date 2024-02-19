@@ -1,10 +1,10 @@
 import mysql.connector
 
 mydb = mysql.connector.connect(
-    host = "localhost",
-    user = "root",
-    password = "stopnow3",
-    database = "amazebot_db"
+    host = "bhztyhjdujrstsy22vqc-mysql.services.clever-cloud.com",
+    user = "uuvftx1sn4wxnxsj",
+    password = "bAZQDRqlGtMlZT60xAfY",
+    database = "bhztyhjdujrstsy22vqc"
 )
 
 mycursor = mydb.cursor()
