@@ -8,3 +8,4 @@ flask-cors
 selenium-stealth
 schedule
 flask-apscheduler
+mysql
