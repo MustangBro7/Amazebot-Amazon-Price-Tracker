@@ -1,0 +1,10 @@
+Flask
+selenium
+beautifulsoup4
+requests
+Pillow
+pytesseract
+flask-cors
+selenium-stealth
+schedule
+flask-apscheduler
