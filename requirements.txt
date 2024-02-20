@@ -9,3 +9,5 @@ selenium-stealth
 schedule
 flask-apscheduler
 mysql.connector
+gunicorn 
+python-dotenv
