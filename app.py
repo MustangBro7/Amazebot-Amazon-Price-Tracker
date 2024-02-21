@@ -24,7 +24,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "*"}})
 scheduler = APScheduler()
 
 def scheduled_update():
