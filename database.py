@@ -7,6 +7,13 @@ mydb = mysql.connector.connect(
     database = "bhztyhjdujrstsy22vqc"
 )
 
+# mydb = mysql.connector.connect(
+#     host = "abhinavmohan12.mysql.pythonanywhere-services.com",
+#     user = "abhinavmohan12",
+#     password = "stopnow3",
+#     database = "abhinavmohan12$amazebot_db"
+# )
+
 mycursor = mydb.cursor()
  
 mycursor.execute("SHOW TABLES LIKE 'amazebot_data'")

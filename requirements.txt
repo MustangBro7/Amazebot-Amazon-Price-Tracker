@@ -11,3 +11,4 @@ flask-apscheduler
 mysql.connector
 gunicorn 
 python-dotenv
+webdriver-manager

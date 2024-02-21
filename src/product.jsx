@@ -103,7 +103,7 @@ export default function InputWithButton() {
       setCards(prevCards => prevCards.filter((card, i) => i !== index));}}
       console.log(cards[index]['link'])
       const del_url = {url:cards[index]['link']}
-    const response = await fetch("http://localhost:5000/delete",{
+    const response = await fetch("https://amazebot.onrender.com/delete",{
       method : "DELETE",
       headers: {
         'Content-Type': 'application/json',

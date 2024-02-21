@@ -1,6 +1,7 @@
 from flask import Flask, request
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.common.exceptions import TimeoutException
@@ -19,6 +20,7 @@ from database import insert_data , update_data , get_data , delete_data
 from selenium_stealth import stealth
 import schedule
 from flask_apscheduler import APScheduler
+from webdriver_manager.chrome import ChromeDriverManager
 
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 app = Flask(__name__)
@@ -44,7 +46,12 @@ def bot():
     chrome_options.add_argument("--headless")
     chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
     chrome_options.add_experimental_option("useAutomationExtension", False)
-    driver = webdriver.Chrome(options=chrome_options)
+    driver_path = ChromeDriverManager().install()
+    print(driver_path)
+    driver_service = Service(driver_path)
+    # # driver_service = Service(driver_path)
+    # d = services(driver_path)
+    driver = webdriver.Chrome(service=driver_service, options=chrome_options)
     driver.get(url)
     cookies = driver.get_cookies()
     for cookie in cookies:
