@@ -1,18 +1,14 @@
 import mysql.connector
 
-mydb = mysql.connector.connect(
-    host = "bhztyhjdujrstsy22vqc-mysql.services.clever-cloud.com",
-    user = "uuvftx1sn4wxnxsj",
-    password = "bAZQDRqlGtMlZT60xAfY",
-    database = "bhztyhjdujrstsy22vqc"
-)
-
-# mydb = mysql.connector.connect(
-#     host = "abhinavmohan12.mysql.pythonanywhere-services.com",
-#     user = "abhinavmohan12",
-#     password = "stopnow3",
-#     database = "abhinavmohan12$amazebot_db"
-# )
+try:
+    mydb = mysql.connector.connect(
+        host = "bhztyhjdujrstsy22vqc-mysql.services.clever-cloud.com",
+        user = "uuvftx1sn4wxnxsj",
+        password = "bAZQDRqlGtMlZT60xAfY",
+        database = "bhztyhjdujrstsy22vqc"
+    )
+except mysql.connector.Error as err:
+    print(f"Error connecting to the database: {err}")
 
 mycursor = mydb.cursor()
  
