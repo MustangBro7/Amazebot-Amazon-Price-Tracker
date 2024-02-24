@@ -1,14 +1,18 @@
 import mysql.connector
+from dotenv import load_dotenv
+import os
+# try:
+load_dotenv()
+print(os.getenv('DB_HOST'))
+mydb = mysql.connector.connect(
+    host = os.getenv('DB_HOST'),
+    user = os.getenv('DB_USER'),
+    password = os.getenv('DB_PASSWORD'),
+    database = os.getenv('DB_NAME'),
 
-try:
-    mydb = mysql.connector.connect(
-        host = "bhztyhjdujrstsy22vqc-mysql.services.clever-cloud.com",
-        user = "uuvftx1sn4wxnxsj",
-        password = "bAZQDRqlGtMlZT60xAfY",
-        database = "bhztyhjdujrstsy22vqc"
-    )
-except mysql.connector.Error as err:
-    print(f"Error connecting to the database: {err}")
+)
+# except mysql.connector.Error as err:
+    # print(f"Error connecting to the database: {err}")
 
 mycursor = mydb.cursor()
  

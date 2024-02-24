@@ -33,7 +33,8 @@ def scheduled_update():
         url1 = i[3]
         print(url1)
         data = {"url":url1}
-        requests.post("http://localhost:5000" , json = data)
+        # requests.post("http://localhost:5000" , json = data)
+        requests.post("https://amazebot.onrender.com" , json = data)
 
 @app.route('/' , methods = ['GET' , "POST" ])
 
@@ -46,12 +47,12 @@ def bot():
     chrome_options.add_argument("--headless")
     chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
     chrome_options.add_experimental_option("useAutomationExtension", False)
-    driver_path = ChromeDriverManager().install()
-    print(driver_path)
-    driver_service = Service(driver_path)
+    # driver_path = ChromeDriverManager().install()
+    # print(driver_path)
+    # driver_service = Service(driver_path)
     # # driver_service = Service(driver_path)
     # d = services(driver_path)
-    driver = webdriver.Chrome(service=driver_service, options=chrome_options)
+    driver = webdriver.Chrome(options=chrome_options)
     driver.get(url)
     cookies = driver.get_cookies()
     for cookie in cookies:
