@@ -22,8 +22,8 @@ export default function InputWithButton() {
   // useEffect({
     useEffect(() => {
       const fetchdata = async() =>{
-      // const response = await fetch("https://amazebot.onrender.com/getdata", {  
-      const response = await fetch("http://localhost:5000/getdata", {
+      const response = await fetch("https://amazebot.onrender.com/getdata", {  
+      // const response = await fetch("http://localhost:5000/getdata", {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -41,7 +41,8 @@ export default function InputWithButton() {
     
     const url = {url : url1}
     try{
-      const response = await fetch("http://localhost:5000", {
+      const response = await fetch("https://amazebot.onrender.com", {
+      // const response = await fetch("http://localhost:5000", {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

@@ -36,9 +36,10 @@ def scheduled_update():
         # requests.post("http://localhost:5000" , json = data)
         requests.post("https://amazebot.onrender.com" , json = data)
 
-@app.route('/' , methods = ['GET' , "POST" ])
+@app.route('/' , methods = [ "POST" ])
 
 def bot():
+    print("Welcome to amazebot")
     if request.method == 'POST':
         data = request.get_json()
         print(data['url'])
