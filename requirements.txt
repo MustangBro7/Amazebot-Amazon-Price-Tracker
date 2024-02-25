@@ -12,3 +12,4 @@ mysql.connector
 gunicorn 
 python-dotenv
 webdriver-manager
+psycopg2
