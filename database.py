@@ -72,7 +72,7 @@ mydb = psycopg2.connect(
     user=os.getenv('DB_USER'),
     password=os.getenv('DB_PASSWORD'),
     database=os.getenv('DB_NAME'),
-    port=os.getenv('DB_PORT', 5432)
+    # port=os.getenv('DB_PORT', 5432)
 )
 
 # Create cursor
