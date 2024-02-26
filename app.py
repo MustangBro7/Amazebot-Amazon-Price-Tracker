@@ -55,6 +55,8 @@ def bot():
     chrome_options.add_argument("--headless")
     chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
     chrome_options.add_experimental_option("useAutomationExtension", False)
+    chrome_options.add_argument('--no-sandbox')
+    chrome_options.add_argument('--disable-dev-shm-usage')
     # driver_path = ChromeDriverManager().install()
     # print(driver_path)
     # driver_service = Service(driver_path)
