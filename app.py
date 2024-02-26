@@ -29,6 +29,11 @@ app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 scheduler = APScheduler()
 
+@app.after_request
+def add_csp_header(response):
+    response.headers['Content-Security-Policy'] = "default-src 'self'; script-src 'self' 'unsafe-inline';"
+    return response
+
 def scheduled_update():
     current_data = get_data()
     for i in current_data:
