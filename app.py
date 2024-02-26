@@ -23,6 +23,8 @@ from flask_apscheduler import APScheduler
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+import time
+import random
 
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 app = Flask(__name__)
@@ -56,14 +58,27 @@ def bot():
         chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
         chrome_options.add_experimental_option("useAutomationExtension", False)
         chrome_options.add_argument('--no-sandbox')
-        chrome_options.add_argument('--disable-dev-shm-usage')
+        chrome_options.add_argument('--disable-dev-shm-usage' )
+
+        user_agents = [
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36",
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.150 Safari/537.36",
+            # Add more user agents as needed
+        ]
+
         # driver_path = ChromeDriverManager().install()
         # print(driver_path)
         # driver_service = Service(driver_path)
         # # driver_service = Service(driver_path)
         # d = services(driver_path)
+        # driver = webdriver.Chrome(options=chrome_options)
+        
+        user_agent = random.choice(user_agents)
+        chrome_options.add_argument(f"user-agent={user_agent}")
         driver = webdriver.Chrome(options=chrome_options)
+
         driver.get(url)
+        time.sleep(random.uniform(3, 5))
         cookies = driver.get_cookies()
         for cookie in cookies:
             driver.add_cookie(cookie)
