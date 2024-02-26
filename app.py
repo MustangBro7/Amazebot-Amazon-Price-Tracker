@@ -113,7 +113,7 @@ def bot():
 
 
 
-        # print(source)
+        print(source)
         source = driver.page_source
         soup = bs(source , 'html.parser')
         # print(soup)
