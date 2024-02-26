@@ -50,81 +50,81 @@ def bot():
     if request.method == 'POST':
         data = request.get_json()
         print(data['url'])
-    url = data['url']
-    chrome_options = Options()
-    chrome_options.add_argument("--headless")
-    chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
-    chrome_options.add_experimental_option("useAutomationExtension", False)
-    chrome_options.add_argument('--no-sandbox')
-    chrome_options.add_argument('--disable-dev-shm-usage')
-    # driver_path = ChromeDriverManager().install()
-    # print(driver_path)
-    # driver_service = Service(driver_path)
-    # # driver_service = Service(driver_path)
-    # d = services(driver_path)
-    driver = webdriver.Chrome(options=chrome_options)
-    driver.get(url)
-    cookies = driver.get_cookies()
-    for cookie in cookies:
-        driver.add_cookie(cookie)
-    print(cookies)
-    driver.get(url)
+        url = data['url']
+        chrome_options = Options()
+        chrome_options.add_argument("--headless")
+        chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
+        chrome_options.add_experimental_option("useAutomationExtension", False)
+        chrome_options.add_argument('--no-sandbox')
+        chrome_options.add_argument('--disable-dev-shm-usage')
+        # driver_path = ChromeDriverManager().install()
+        # print(driver_path)
+        # driver_service = Service(driver_path)
+        # # driver_service = Service(driver_path)
+        # d = services(driver_path)
+        driver = webdriver.Chrome(options=chrome_options)
+        driver.get(url)
+        cookies = driver.get_cookies()
+        for cookie in cookies:
+            driver.add_cookie(cookie)
+        print(cookies)
+        driver.get(url)
 
-    try:    
-        captcha =  driver.find_element(By.XPATH, f"//h4[contains(text(), 'Enter the characters you see below')]") 
-        try:
-            image = driver.find_element(By.TAG_NAME , "img")
-            image_url = image.get_attribute('src')
-            print(image_url)
-            response = requests.get(image_url)
-            if response.status_code == 200:
-                img = Image.open(BytesIO(response.content))
-                text = pytesseract.image_to_string(img)
-            print(text)
-            print(captcha.text)
-            print('\nPlease solve the captcha now')
-            wait = WebDriverWait(driver, 30)
+        try:    
+            captcha =  driver.find_element(By.XPATH, f"//h4[contains(text(), 'Enter the characters you see below')]") 
             try:
-                wait.until(ec.presence_of_element_located(('css selector', 'span[aria-checked="true"]')))
-            except TimeoutException:
-                print('\nFailed to solve captcha in the expected time')
-            else:
-                print('\nCaptcha solved successfully, proceeding to click!')
+                image = driver.find_element(By.TAG_NAME , "img")
+                image_url = image.get_attribute('src')
+                print(image_url)
+                response = requests.get(image_url)
+                if response.status_code == 200:
+                    img = Image.open(BytesIO(response.content))
+                    text = pytesseract.image_to_string(img)
+                print(text)
+                print(captcha.text)
+                print('\nPlease solve the captcha now')
+                wait = WebDriverWait(driver, 30)
+                try:
+                    wait.until(ec.presence_of_element_located(('css selector', 'span[aria-checked="true"]')))
+                except TimeoutException:
+                    print('\nFailed to solve captcha in the expected time')
+                else:
+                    print('\nCaptcha solved successfully, proceeding to click!')
+            except NoSuchElementException:
+                print("Couldn't Find Image")
         except NoSuchElementException:
-            print("Couldn't Find Image")
-    except NoSuchElementException:
-        # If the element doesn't exist, print a message
-        print("No Captcha!!!")
+            # If the element doesn't exist, print a message
+            print("No Captcha!!!")
 
 
 
-    # print(source)
-    source = driver.page_source
-    soup = bs(source , 'html.parser')
-    # print(soup)
-    price = soup.findAll(string=re.compile("₹|Rs\.?"))
-    price1 = soup.find('span' , class_="a-price-whole")
-    symbol = soup.find('span' , class_="a-price-symbol")
-    print(price1)
-    # image_container = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "imgTagWrapper")))
-    # image_link = image_container.find_element(By.TAG_NAME , 'img')
-    # img_src = image_link.get_attribute('src')
-    image_container = soup.find(class_='imgTagWrapper')
-    image_link = image_container.find('img')
-    img_src = image_link.get('src')
-    print(img_src)
-    name = soup.find('span' , id = "productTitle")
-    product_name = name.text.strip()    
-    if price1 :
-        display_price = symbol.text + price1.text
-        print(display_price)
-    else:
-        print("Out of Stock")
-        display_price = "Out of stock"
-    driver.close()
-    updated_data = update_data(display_price , product_name , url , img_src)
+        # print(source)
+        source = driver.page_source
+        soup = bs(source , 'html.parser')
+        # print(soup)
+        price = soup.findAll(string=re.compile("₹|Rs\.?"))
+        price1 = soup.find('span' , class_="a-price-whole")
+        symbol = soup.find('span' , class_="a-price-symbol")
+        print(price1)
+        # image_container = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "imgTagWrapper")))
+        # image_link = image_container.find_element(By.TAG_NAME , 'img')
+        # img_src = image_link.get_attribute('src')
+        image_container = soup.find(class_='imgTagWrapper')
+        image_link = image_container.find('img')
+        img_src = image_link.get('src')
+        print(img_src)
+        name = soup.find('span' , id = "productTitle")
+        product_name = name.text.strip()    
+        if price1 :
+            display_price = symbol.text + price1.text
+            print(display_price)
+        else:
+            print("Out of Stock")
+            display_price = "Out of stock"
+        driver.close()
+        updated_data = update_data(display_price , product_name , url , img_src)
 
-    return {"Price": display_price , "Name": product_name , "link":url , "img_link":img_src}
+        return {"Price": display_price , "Name": product_name , "link":url , "img_link":img_src}
 
 
 
