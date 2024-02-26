@@ -113,8 +113,9 @@ def bot():
 
 
 
-        print(source)
+        
         source = driver.page_source
+        print(source)
         soup = bs(source , 'html.parser')
         # print(soup)
         price = soup.findAll(string=re.compile("₹|Rs\.?"))
