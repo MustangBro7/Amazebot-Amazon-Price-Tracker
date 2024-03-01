@@ -11,6 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+
 import { data } from 'autoprefixer';
 
 
@@ -22,8 +23,8 @@ export default function InputWithButton() {
   // useEffect({
     useEffect(() => {
       const fetchdata = async() =>{
-      const response = await fetch("https://amazebot.onrender.com/getdata", {  
-      // const response = await fetch("http://localhost:5000/getdata", {
+      // const response = await fetch("https://amazebot.onrender.com/getdata", {  
+      const response = await fetch("http://localhost:5000/getdata", {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -41,8 +42,8 @@ export default function InputWithButton() {
     
     const url = {url : url1}
     try{
-      const response = await fetch("https://amazebot.onrender.com", {
-      // const response = await fetch("http://localhost:5000", {
+      // const response = await fetch("https://amazebot.onrender.com", {
+      const response = await fetch("http://localhost:5000", {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -116,7 +117,7 @@ export default function InputWithButton() {
   console.log(cards);
   return (
     <>
-    <div className="flex w-full max-w-sm items-center space-x-2">
+    <div className="flex w-full max-w-sm items-center space-x-2 pt-12">
       <Input  placeholder="Enter Link" onChange={(e) =>handlechange(e.target.value)} />
       <Button type="submit" onClick={onclick}>Search</Button>
       <Button className="flex items-center justify-center" onClick={()=>checkallprice()}>Check All</Button>
