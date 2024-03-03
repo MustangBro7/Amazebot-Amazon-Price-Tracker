@@ -42,8 +42,8 @@ def scheduled_update():
         url1 = i[3]
         print(url1)
         data = {"url":url1}
-        # requests.post("http://localhost:5000" , json = data)
-        requests.post("https://amazebot.onrender.com" , json = data)
+        requests.post("http://localhost:5000" , json = data)
+        # requests.post("https://amazebot.onrender.com" , json = data)
 
 @app.route('/' , methods = [ "POST" ])
 
@@ -120,23 +120,34 @@ def bot():
         # print(soup)
         price = soup.findAll(string=re.compile("₹|Rs\.?"))
         price1 = soup.find('span' , class_="a-price-whole")
+        # price1 = soup.find('span' , class_="a-offscreen")
         symbol = soup.find('span' , class_="a-price-symbol")
-        print(price1)
+        # print(price1)
         # image_container = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "imgTagWrapper")))
         # image_link = image_container.find_element(By.TAG_NAME , 'img')
         # img_src = image_link.get_attribute('src')
+        try:
+            stock = soup.find('span' , class_='a-size-medium a-color-success')
+        except:
+            stock.text = "Available"
+        print(stock)
         image_container = soup.find(class_='imgTagWrapper')
         image_link = image_container.find('img')
         img_src = image_link.get('src')
-        print(img_src)
+        # print(img_src)
         name = soup.find('span' , id = "productTitle")
         product_name = name.text.strip()    
-        if price1 :
+        if stock:
+            if stock.text == " Currently unavailable. ":
+                print("Out of Stock")
+                display_price = "Out of stock"
+            else :
+                display_price = symbol.text + price1.text
+                print(display_price)
+        else :
             display_price = symbol.text + price1.text
             print(display_price)
-        else:
-            print("Out of Stock")
-            display_price = "Out of stock"
+            
         driver.close()
         updated_data = update_data(display_price , product_name , url , img_src)
 
